@@ -1,0 +1,484 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Fredoka One', cursive;
+    background-color: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.game-container {
+    max-width: 900px;
+    width: 100%;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.header {
+    background: linear-gradient(135deg, #4b6cb7, #182848);
+    color: white;
+    padding: 15px 20px;
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    font-size: 2rem;
+}
+
+.hamburger {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: none;
+    padding: 5px;
+}
+
+.player-turn {
+    font-size: 1.2rem;
+    color: white;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+}
+
+.board {
+    width: 100%;
+    max-width: 600px;
+    aspect-ratio: 1/1;
+    background-color: #f0d9b5;
+    border: 15px solid #8b4513;
+    border-radius: 15px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.cell {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background-image: url('https://img.freepik.com/free-vector/watercolor-abstract-purple-background_23-2149120778.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.cell-number {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 0.7rem;
+    color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
+    padding: 1px 3px;
+    border-radius: 3px;
+}
+
+.ladder {
+    background-color: rgba(76, 175, 80, 0.3);
+    position: relative;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/992/992711.png'), 
+                      linear-gradient(to bottom, #4CAF50, #8BC34A);
+    background-size: 50% auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    border: 2px dashed #2E7D32;
+}
+
+
+.ladder::after {
+    content: "↑";
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 1.2rem;
+    color: #1B5E20;
+    font-weight: bold;
+}
+
+.snake {
+    background-color: rgba(244, 67, 54, 0.3);
+    position: relative;
+    background-image: url('https://cdn-icons-png.flaticon.com/512/103/103228.png'), 
+                      linear-gradient(to bottom, #F44336, #E91E63);
+    background-size: 50% auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    border: 2px dashed #C62828;
+}
+
+.snake::after {
+    content: "↓";
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    font-size: 1.2rem;
+    color: #B71C1C;
+    font-weight: bold;
+}
+
+.snake::before {
+    content: attr(data-snake-to);
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 0.7rem;
+    color: white;
+    background-color: #C62828;
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+.player {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    z-index: 10;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.dice-container {
+    margin-top: 25px;
+}
+
+.dice {
+    width: 70px;
+    height: 70px;
+    background-color: white;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+    font-weight: bold;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.2s;
+}
+
+.dice:hover {
+    transform: scale(1.05);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 20px;
+    color: #4b6cb7;
+}
+
+.modal-content p {
+    margin-bottom: 15px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid #4b6cb7;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.modal-content button {
+    padding: 12px 25px;
+    background-color: #4b6cb7;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.modal-content button:hover {
+    background-color: #3a5a9a;
+    transform: translateY(-2px);
+}
+
+/* Controls */
+.desktop-controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.mobile-controls {
+    display: none;
+    background-color: #4b6cb7;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-controls.active {
+    display: block;
+}
+
+.player-selection {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.player-selection select, 
+.player-selection button,
+.controls-content button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+
+.player-selection select {
+    flex: 2;
+}
+
+.player-selection button {
+    flex: 1;
+}
+
+.player-selection select:hover, 
+.player-selection button:hover,
+.controls-content button:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* For the top of the ladder */
+.cell[data-number="14"],
+.cell[data-number="31"],
+.cell[data-number="38"],
+.cell[data-number="84"],
+.cell[data-number="59"],
+.cell[data-number="67"],
+.cell[data-number="81"],
+.cell[data-number="91"] {
+    background-image: linear-gradient(to bottom, #8BC34A, #4CAF50);
+}
+
+/* Add ladder numbers to show connections */
+.ladder::before {
+    content: attr(data-ladder-to);
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 0.7rem;
+    color: white;
+    background-color: #2E7D32;
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+
+/* Add to your existing CSS */
+.cell[data-number="100"] {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3132/3132789.png'), 
+                     url('https://img.freepik.com/free-vector/watercolor-abstract-purple-background_23-2149120778.jpg');
+    background-size: 50% auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+}
+
+.dare-options {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.dare-options button {
+    padding: 10px 15px;
+    background-color: #4b6cb7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* Add these styles to your existing CSS */
+.booster {
+    background-color: rgba(255, 215, 0, 0.3);
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3523/3523095.png'), 
+                     linear-gradient(to bottom, #FFD700, #FFA500);
+    background-size: 40% auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    border: 2px dashed #FF8C00;
+    animation: pulse 1.5s infinite;
+}
+
+.booster::after {
+    content: "✨";
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 1.2rem;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Trophy cell */
+.cell[data-number="100"] {
+    background-image: url('https://cdn-icons-png.flaticon.com/512/3132/3132789.png'), 
+                     linear-gradient(to bottom, #FFD700, #C0C0C0);
+    background-size: 50% auto, cover;
+    background-position: center, center;
+    background-repeat: no-repeat;
+    animation: shine 2s infinite;
+}
+
+@keyframes shine {
+    0% { box-shadow: 0 0 10px gold; }
+    50% { box-shadow: 0 0 30px gold; }
+    100% { box-shadow: 0 0 10px gold; }
+}
+
+#player-selection label {
+    display: block;
+    margin: 4px 0;
+}
+
+#mobile-controls {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+
+#mobile-controls.active {
+    display: flex;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+
+    .header h1 {
+        font-size: 1.7rem;
+    }
+    
+    .hamburger {
+        display: block;
+    }
+
+    .game-container{
+        margin-top: 0;
+    }
+    
+    .desktop-controls {
+        display: none;
+    }
+    
+    .board-container{
+        padding: 10px 0;
+    }
+
+    body{
+        margin: 0;
+        padding: 0;
+    }
+    .board {
+        max-width: 100vw;
+        height: 90vw;
+        border-width: 10px;
+    }
+    
+    .cell {
+        font-size: 0.7rem;
+    }
+    
+    .dice {
+        width: 80px;
+        height: 80px;
+        font-size: 32px;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .board {
+        max-width: 95vw;
+        height: 95vw;
+        border-width: 8px;
+    }
+    
+    .player-selection {
+        flex-direction: column;
+    }
+}
