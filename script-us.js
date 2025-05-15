@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
         diceValue: 0,
         soundEnabled: true,
         gameActive: false,
-        cheatUsed: false,
-        cheatPlayerId: null,
         snakes: {
             17: 7, 27: 20, 49: 15, 43: 8, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 79
         },
@@ -187,7 +185,12 @@ document.addEventListener('DOMContentLoaded', function () {
         '#ff6b6b', // Red
         '#6bff6b', // Green
         '#ffcc00', // Yellow
-        '#cc66ff'  // Purple
+        '#cc66ff', // Purple
+        '#ff9966', // Orange
+        '#66ffff', // Cyan
+        '#ff66cc', // Pink
+        '#a1ff00', // Lime
+        '#9999ff'  // Lavender Blue
     ];
 
     // DOM elements
@@ -248,30 +251,38 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Start new game with selected players
     function startGame(event) {
-        const playerCountSelect = document.getElementById('player-count');
-        const playerCount = parseInt(playerCountSelect.value);
+        let checkboxes;
 
-        if (!playerCount || playerCount < 2 || playerCount > 8) {
-            alert('Please select 2 to 8 players.');
+        // Determine which button was clicked
+        if (event.target.id === 'start-btn-mobile') {
+            checkboxes = document.querySelectorAll('#player-selection-mobile input[type="checkbox"]');
+        } else {
+            checkboxes = document.querySelectorAll('#player-selection-desktop input[type="checkbox"]');
+        }
+
+        const selectedNames = Array.from(checkboxes)
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+
+        if (selectedNames.length === 0) {
+            alert('Please select at least one player.');
             return;
         }
 
         gameState.players = [];
 
-        for (let i = 0; i < playerCount; i++) {
+        selectedNames.forEach((name, index) => {
             gameState.players.push({
-                id: i + 1,
-                name: `Player ${i + 1}`,
+                id: index + 1,
+                name: name,
                 position: 1,
-                color: getRandomColor()
+                color: playerColors[index % playerColors.length]
             });
-        }
+        });
 
         gameState.currentPlayer = 0;
         gameState.diceValue = 0;
         gameState.gameActive = true;
-        gameState.cheatUsed = false;
-        gameState.cheatPlayerId = null;
 
         dice.textContent = '?';
         updatePlayerDisplay();
@@ -280,10 +291,9 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileControls.classList.remove('active');
     }
 
-    function getRandomColor() {
-        const hue = Math.floor(Math.random() * 360);
-        return `hsl(${hue}, 70%, 60%)`;
-    }
+
+
+
 
     // Create the game board
     function createBoard() {
@@ -367,22 +377,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 clearInterval(animationInterval);
                 dice.textContent = gameState.diceValue;
                 movePlayer();
-                const corners = [
-                    { top: "10px", left: "10px" },
-                    { top: "10px", right: "10px" },
-                    { bottom: "10px", left: "10px" },
-                    { bottom: "10px", right: "10px" },
-                ];
-                const randomCorner = corners[Math.floor(Math.random() * corners.length)];
-                const diceContainer = document.querySelector(".dice-container");
-                diceContainer.style.top = randomCorner.top || "";
-                diceContainer.style.bottom = randomCorner.bottom || "";
-                diceContainer.style.left = randomCorner.left || "";
-                diceContainer.style.right = randomCorner.right || "";
-
-                // Change dice color to current player's color
-                dice.style.backgroundColor = gameState.players[gameState.currentPlayer].color;
-
                 dice.style.pointerEvents = 'auto';
             }
         }, 100);
@@ -503,89 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
         dareText.textContent = randomDare;
         dareModal.style.display = 'flex';
         gameState.currentDare = randomDare;
-
-        // Remove old buttons if already added
-        const existingOptions = document.querySelector(".dare-options");
-        if (existingOptions) existingOptions.remove();
-
-        // Create a new container for buttons
-        const optionsDiv = document.createElement('div');
-        optionsDiv.className = "dare-options";
-
-        // Button for completing dare
-        const completeBtn = document.createElement('button');
-        completeBtn.textContent = "I Completed the Dare!";
-        completeBtn.addEventListener('click', completeDare);
-
-        // Button for skipping dare
-        const skipBtn = document.createElement('button');
-        skipBtn.textContent = "Skip Dare (-2 steps)";
-        skipBtn.addEventListener('click', () => {
-            dareModal.style.display = 'none';
-            const player = gameState.players[gameState.currentPlayer];
-            const newPosition = Math.max(player.position - 2, 1);
-            animateMovement(player, newPosition, () => {
-                player.position = newPosition;
-                renderPlayers();
-                nextPlayer();
-            });
-        });
-
-        // Add both buttons
-        optionsDiv.appendChild(completeBtn);
-        optionsDiv.appendChild(skipBtn);
-
-        // Add to modal
-        const modal = document.querySelector("#dare-modal .modal-content");
-        modal.appendChild(optionsDiv);
-
-        // Secret cheat activation
-        document.getElementById("secret-cheat").addEventListener("click", () => {
-            console.log("Footer clicked");
-            if (gameState.cheatUsed || !gameState.gameActive) return;
-            gameState.cheatUsed = true;
-            const player = gameState.players[gameState.currentPlayer];
-            gameState.cheatPlayerId = player.id;
-
-            document.getElementById("secret-cheat").classList.add("active-hack");
-            document.getElementById("secret-cheat").style.color = player.color;
-
-            alert(`${player.name} has unlocked a Brahmastra! 🚀`);
-
-            // Override checkSpecialCells to skip snakes for the cheater
-            const originalCheckSpecial = checkSpecialCells;
-            checkSpecialCells = function (player) {
-                if (player.id === gameState.cheatPlayerId) {
-                    const pos = Number(player.position);
-
-                    // Booster
-                    if (gameState.boosterCells.includes(pos)) {
-                        showBoosterModal();
-                        return;
-                    }
-
-                    // Ladder
-                    if (gameState.ladders[pos]) {
-                        const newPosition = gameState.ladders[pos];
-                        if (gameState.soundEnabled) ladderSound.play();
-                        animateMovement(player, newPosition, () => {
-                            player.position = newPosition;
-                            renderPlayers();
-                            nextPlayer();
-                        });
-                        return;
-                    }
-
-                    // ✅ Skip snake logic, just move forward
-                    nextPlayer();
-                } else {
-                    originalCheckSpecial(player);
-                }
-            };
-        });
-
     }
-
 
     // Complete dare
     function completeDare() {
@@ -807,4 +719,49 @@ document.addEventListener('DOMContentLoaded', function () {
         dareModal.style.display = 'none';
         mobileControls.classList.remove('active');
     }
+
+    // Secret cheat activation
+    document.getElementById("secret-cheat").addEventListener("click", () => {
+        if (gameState.cheatUsed || !gameState.gameActive) return;
+        gameState.cheatUsed = true;
+        const player = gameState.players[gameState.currentPlayer];
+        gameState.cheatPlayerId = player.id;
+
+        document.getElementById("secret-cheat").classList.add("active-hack");
+        document.getElementById("secret-cheat").style.color = player.color;
+
+        // alert(`${player.name} has unlocked a secret power! 🚀`);
+
+        // Override checkSpecialCells to skip snakes for the cheater
+        const originalCheckSpecial = checkSpecialCells;
+        checkSpecialCells = function (player) {
+            if (player.id === gameState.cheatPlayerId) {
+                const pos = Number(player.position);
+
+                // Booster
+                if (gameState.boosterCells.includes(pos)) {
+                    showBoosterModal();
+                    return;
+                }
+
+                // Ladder
+                if (gameState.ladders[pos]) {
+                    const newPosition = gameState.ladders[pos];
+                    if (gameState.soundEnabled) ladderSound.play();
+                    animateMovement(player, newPosition, () => {
+                        player.position = newPosition;
+                        renderPlayers();
+                        nextPlayer();
+                    });
+                    return;
+                }
+
+                // ✅ Skip snake logic, just move forward
+                nextPlayer();
+            } else {
+                originalCheckSpecial(player);
+            }
+        };
+    });
+
 });

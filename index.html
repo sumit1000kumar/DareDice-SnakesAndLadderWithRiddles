@@ -2,145 +2,112 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snakes & Ladders : Sumit's Desk</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-
-        }
-
-        .custom-footer {
-            width: 100%;
-            padding: 1rem 2rem;
-            background: #1f1f1f;
-            color: #f0f0f0;
-            text-align: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 1rem;
-            position: relative;
-            bottom: 0;
-        }
-
-        .footer-name {
-            color: #ff7f50;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .footer-name:hover {
-            color: #ffa07a;
-            cursor: pointer;
-        }
-
-        @media (max-width: 600px) {
-            .custom-footer {
-                font-size: 0.9rem;
-                padding: 0.8rem 1rem;
-            }
-        }
-
-        .game-container {
-            margin: 0;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DareDice : Snakes & Ladder packed with exciting Riddles and Dares</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body>
-    <div class="game-container">
-        <div class="header">
-            <div class="header-content">
-                <h1>TP Snakes & Ladders</h1>
-                <button class="hamburger" id="hamburger">
-                    <i class="fas fa-bars"></i>
-                </button>
-            </div>
+  <header class="header">
+    <h1>Dare <span style="color: yellow;">Dice</span></h1>
 
-            <div class="desktop-controls">
-                <div class="player-selection" id="player-selection-desktop">
-                    <label><input type="checkbox" value="Sumit"> Sumit</label>
-                    <label><input type="checkbox" value="Mina"> Mina</label>
-                    <label><input type="checkbox" value="Aunty"> Aunty</label>
-                    <label><input type="checkbox" value="Rakesh"> Rakesh</label>
-                    <label><input type="checkbox" value="Chudaill"> Chudaill</label>
-                    <label><input type="checkbox" value="Sunny"> Sunny</label>
-                    <button id="start-btn">Start Game</button>
-                </div>
-                <button id="sound-btn">Sound: ON</button>
-                <button id="restart-btn">New Game</button>
-            </div>
+    <!-- Hamburger menu for mobile -->
+    <div class="hamburger" id="hamburger">&#9776;</div>
 
-            <div class="mobile-controls" id="mobile-controls">
-                <div class="player-selection" id="player-selection-mobile">
-                    <label><input type="checkbox" value="Sumit"> Sumit</label>
-                    <label><input type="checkbox" value="Mina"> Mina</label>
-                    <label><input type="checkbox" value="Aunty"> Aunty</label>
-                    <label><input type="checkbox" value="Rakesh"> Rakesh</label>
-                    <label><input type="checkbox" value="Chudaill"> Chudaill</label>
-                    <label><input type="checkbox" value="Sunny"> Sunny</label>
-                    <button id="start-btn-mobile">Start Game</button>
-                </div>
-                <button id="sound-btn-mobile">Sound: ON</button>
-                <button id="restart-btn-mobile">New Game</button>
-            </div>
-
-            <div class="player-turn">Player: <span id="current-player">Player 1</span></div>
-        </div>
-
-        <div class="board-container">
-            <div class="board" id="board">
-                <!-- Board will be generated with JS -->
-            </div>
-
-            <div class="dice-container">
-                <div class="dice" id="dice">?</div>
-            </div>
-        </div>
-
-        <div id="riddle-modal" class="modal">
-            <div class="modal-content">
-                <h2 id="riddle-question">Riddle Question</h2>
-                <input type="text" id="riddle-answer" placeholder="Your answer...">
-                <button id="submit-answer">Submit</button>
-            </div>
-        </div>
-
-        <div id="booster-modal" class="modal">
-            <div class="modal-content">
-                <h2>Booster Opportunity!</h2>
-                <p id="booster-text">Answer this riddle correctly to get +6 steps!</p>
-                <input type="text" id="booster-answer" placeholder="Your answer...">
-                <button id="submit-booster">Submit</button>
-            </div>
-        </div>
+    <!-- Desktop Controls -->
+    <div class="desktop-controls">
+      <div class="player-selection">
+        <label for="player-count">Number of Players:</label>
+        <select id="player-count">
+          <option value="2">2 Players</option>
+          <option value="3">3 Players</option>
+          <option value="4" selected>4 Players</option>
+          <option value="5">5 Players</option>
+          <option value="6">6 Players</option>
+          <option value="7">7 Players</option>
+          <option value="8">8 Players</option>
+        </select>
+        <button id="start-btn">Start Game</button>
+      </div>
+      <button id="sound-btn">Sound: ON</button>
+      <button id="restart-btn">New Game</button>
     </div>
 
-    <!-- Add this modal after the other modals -->
+    <!-- Mobile Controls -->
+    <div class="mobile-controls" id="mobile-controls">
+      <select id="player-select-mobile">
+        <option value="2">2 Players</option>
+        <option value="3">3 Players</option>
+        <option value="4" selected>4 Players</option>
+        <option value="5">5 Players</option>
+        <option value="6">6 Players</option>
+        <option value="7">7 Players</option>
+        <option value="8">8 Players</option>
+      </select>
+      <button id="start-btn-mobile">Start</button>
+      <button id="sound-btn-mobile">Sound: ON</button>
+      <button id="restart-btn-mobile">New Game</button>
+    </div>
+
+    <div class="player-turn">
+      Player: <span id="current-player">Player 1</span>
+    </div>
+  </header>
+
+  <div class="game-container">
+    <div class="board-container">
+      <div class="board" id="board"></div>
+      <div class="dice-container">
+        <div class="dice" id="dice">?</div>
+      </div>
+    </div>
+
+    <!-- Riddle Modal -->
+    <div id="riddle-modal" class="modal">
+      <div class="modal-content">
+        <h2 id="riddle-question">Riddle Question</h2>
+        <input type="text" id="riddle-answer" placeholder="Your answer..." />
+        <button id="submit-answer">Submit</button>
+      </div>
+    </div>
+
+    <!-- Booster Modal -->
+    <div id="booster-modal" class="modal">
+      <div class="modal-content">
+        <h2>Booster Opportunity!</h2>
+        <p id="booster-text">Answer this riddle correctly to get +6 steps!</p>
+        <input type="text" id="booster-answer" placeholder="Your answer..." />
+        <button id="submit-booster">Submit</button>
+      </div>
+    </div>
+
+    <!-- Dare Modal -->
     <div id="dare-modal" class="modal">
-        <div class="modal-content">
-            <h2>Complete the Dare!</h2>
-            <p id="dare-text">Your dare will appear here</p>
-            <button id="complete-dare">I Completed the Dare!</button>
-        </div>
+      <div class="modal-content">
+        <h2>Complete the Dare!</h2>
+        <p id="dare-text">Your dare will appear here</p>
+        <button id="complete-dare">I Completed the Dare!</button>
+      </div>
     </div>
+  </div>
 
-    <footer class="custom-footer">
-        Made for fun by <span class="footer-name">Sumit</span>
-    </footer>
-    <audio id="dice-sound" src="/dice-sound.wav"></audio>
-    <audio id="move-sound" src="/move-sound.wav"></audio>
-    <audio id="ladder-sound" src="/ladder-sound.wav"></audio>
-    <audio id="snake-sound" src="/snake-sounnd.wav"></audio>
-    <audio id="win-sound" src="/victory-sound.mp3"></audio>
-    <audio id="booster-sound" src="/booster-sound.wav"></audio>
+  <footer class="custom-footer">
+    Made for fun by <span class="footer-name" style="color: yellow;" id="secret-cheat">Sumit</span>
+  </footer>
 
-    <script src="script.js"></script>
+  <!-- Audio -->
+  <audio id="dice-sound" src="/dice-sound.wav"></audio>
+  <audio id="move-sound" src="/move-sound.wav"></audio>
+  <audio id="ladder-sound" src="/ladder-sound.wav"></audio>
+  <audio id="snake-sound" src="/snake-sound.wav"></audio>
+  <audio id="win-sound" src="/victory-sound.mp3"></audio>
+  <audio id="booster-sound" src="/booster-sound.wav"></audio>
+
+  <!-- Script (should always be last) -->
+  <script src="/script.js"></script>
 </body>
 
 </html>
