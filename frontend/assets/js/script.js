@@ -9,10 +9,26 @@ document.addEventListener('DOMContentLoaded', function () {
         cheatUsed: false,
         cheatPlayerId: null,
         snakes: {
-            17: 7, 27: 20, 49: 15, 43: 8, 54: 34, 62: 19, 64: 60, 87: 24, 93: 73, 95: 75, 98: 79
+            23: 3,
+            34: 12,
+            49: 30,
+            57: 18,
+            62: 19,
+            70: 33,
+            76: 50,
+            88: 11,
+            96: 29,
+            98: 53
         },
         ladders: {
-            4: 14, 9: 31, 20: 38, 28: 84, 40: 59, 51: 67, 63: 81, 71: 91
+            7: 24,
+            16: 21,
+            20: 39,
+            27: 46,
+            42: 68,
+            52: 89,
+            65: 74,
+            79: 92
         },
         riddles: [
             { question: "What goes up but never comes down?", answer: "age" },
@@ -125,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ],
         currentSnake: null,
         currentDare: null,
-        boosterCells: [5, 12, 15, 22, 25, 35, 45, 50, 55, 65, 75, 80, 85, 95],
+        boosterCells: [45, 10, 71, 60, 54, 28, 87, 18, 50, 40, 66, 82, 5],
         currentBooster: null,
         funnyMessages: {
             snakeBite: [
@@ -187,7 +203,10 @@ document.addEventListener('DOMContentLoaded', function () {
         '#ff6b6b', // Red
         '#6bff6b', // Green
         '#ffcc00', // Yellow
-        '#cc66ff'  // Purple
+        '#cc66ff', // Purple
+        '#ff9966', // Orange
+        '#66d9ff', // Cyan
+        '#ff66b2'  // Pink
     ];
 
     // DOM elements
@@ -446,7 +465,7 @@ document.addEventListener('DOMContentLoaded', function () {
             animateMovement(player, newPosition, () => {
                 player.position = newPosition;
                 renderPlayers();
-                nextPlayer(); // ✅ switch after ladder
+                nextPlayer(); 
             });
             return;
         }
@@ -469,7 +488,6 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // ✅ No special cell, just move to next player
         nextPlayer();
     }
 
@@ -576,7 +594,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         return;
                     }
 
-                    // ✅ Skip snake logic, just move forward
                     nextPlayer();
                 } else {
                     originalCheckSpecial(player);
@@ -750,7 +767,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const playerElement = document.createElement('div');
                 playerElement.className = `player player-${player.id}`;
                 playerElement.style.backgroundColor = player.color;
-                playerElement.textContent = player.id;
+                const playerIcons = ["🐻", "😎", "😈", "💀", "🎃", "🐯", "🦍", "🤴🏻"];
+                playerElement.textContent = playerIcons[player.id - 1];
                 cell.appendChild(playerElement);
             }
         });

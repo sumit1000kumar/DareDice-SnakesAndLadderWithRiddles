@@ -5,14 +5,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>DareDice : Snakes & Ladder packed with exciting Riddles and Dares</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/frontend/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 
 <body>
+  <!-- header starts -->
   <header class="header">
-    <h1>Dare <span style="color: yellow;">Dice</span></h1>
+    <h1><img src="/frontend/assets/img/logo/gameLogo.png" alt="logo" width="80px" class="logo"> Dare <span style="color: #b0ee21;">Dice</span></h1>
 
     <!-- Hamburger menu for mobile -->
     <div class="hamburger" id="hamburger">&#9776;</div>
@@ -30,12 +31,14 @@
           <option value="7">7 Players</option>
           <option value="8">8 Players</option>
         </select>
-        <button id="start-btn">Start Game</button>
+        <button id="start-btn" class="orange-btn">Start Game</button>
       </div>
-      <button id="sound-btn">Sound: ON</button>
-      <button id="restart-btn">New Game</button>
     </div>
 
+    <div class="navBtns">
+      <button id="sound-btn" class="orange-btn">Sound: ON</button>
+      <button id="restart-btn" class="orange-btn">New Game</button>
+    </div>
     <!-- Mobile Controls -->
     <div class="mobile-controls" id="mobile-controls">
       <select id="player-select-mobile">
@@ -47,16 +50,20 @@
         <option value="7">7 Players</option>
         <option value="8">8 Players</option>
       </select>
-      <button id="start-btn-mobile">Start</button>
-      <button id="sound-btn-mobile">Sound: ON</button>
-      <button id="restart-btn-mobile">New Game</button>
-    </div>
-
-    <div class="player-turn">
-      Player: <span id="current-player">Player 1</span>
+      <button id="start-btn-mobile" class="orange-btn ">Start</button>
+      <button id="sound-btn-mobile" class="orange-btn ">Sound: ON</button>
+      <button id="restart-btn-mobile" class="orange-btn ">New Game</button>
     </div>
   </header>
 
+
+
+  <div class="player-turn">
+    <span class="player-turn-input">
+      Player: <span id="current-player" style="color: black;">Player 1</span>
+    </span>
+  </div>
+ 
   <div class="game-container">
     <div class="board-container">
       <div class="board" id="board"></div>
@@ -95,19 +102,34 @@
   </div>
 
   <footer class="custom-footer">
-    Made for fun by <span class="footer-name" style="color: yellow;" id="secret-cheat">Sumit</span>
+    Made for fun by <span class="footer-name" style="color: #b0ee21;" id="secret-cheat">Sumit</span>
   </footer>
 
   <!-- Audio -->
-  <audio id="dice-sound" src="/dice-sound.wav"></audio>
-  <audio id="move-sound" src="/move-sound.wav"></audio>
-  <audio id="ladder-sound" src="/ladder-sound.wav"></audio>
-  <audio id="snake-sound" src="/snake-sound.wav"></audio>
-  <audio id="win-sound" src="/victory-sound.mp3"></audio>
-  <audio id="booster-sound" src="/booster-sound.wav"></audio>
+  <audio id="dice-sound" src="/frontend/assets/audio/dice-sound.wav"></audio>
+  <audio id="move-sound" src="/frontend/assets/audio/move-sound.wav"></audio>
+  <audio id="ladder-sound" src="/frontend/assets/audio/ladder-sound.wav"></audio>
+  <audio id="snake-sound" src="/frontend/assets/audio/snake-sound.wav"></audio>
+  <audio id="win-sound" src="/frontend/assets/audio/victory-sound.mp3"></audio>
+  <audio id="booster-sound" src="/frontend/assets/audio/booster-sound.wav"></audio>
 
   <!-- Script (should always be last) -->
-  <script src="/script.js"></script>
+  <script src="/frontend/assets/js/script.js"></script>
+  <script src="/frontend/assets/js/instructions.js"></script>
+
+  <!-- hamburger script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const hamburger = document.getElementById('hamburger');
+      const mobileControls = document.getElementById('mobile-controls');
+
+      hamburger.addEventListener('click', function () {
+        mobileControls.classList.toggle('show');
+      });
+    });
+  </script>
+
+
 </body>
 
 </html>
