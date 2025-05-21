@@ -8,12 +8,48 @@
   <link rel="stylesheet" href="/frontend/assets/css/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    .room-controls {
+      margin: 20px;
+      text-align: center;
+    }
+
+    .room-controls input[type="text"] {
+      padding: 8px;
+      width: 200px;
+      border: 2px solid #ff9800;
+      border-radius: 6px;
+      margin-right: 10px;
+      font-size: 16px;
+    }
+
+    .room-controls button {
+      padding: 8px 16px;
+      font-size: 15px;
+      border: none;
+      background-color: #ff9800;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .room-controls button:hover {
+      background-color: #e88e00;
+    }
+
+    #room-status {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #444;
+    }
+  </style>
 </head>
 
 <body>
   <!-- header starts -->
   <header class="header">
-    <h1><img src="/frontend/assets/img/logo/gameLogo.png" alt="logo" width="80px" class="logo"> Dare <span style="color: #b0ee21;">Dice</span></h1>
+    <h1><img src="/frontend/assets/img/logo/gameLogo.png" alt="logo" width="80px" class="logo"> Dare <span
+        style="color: #b0ee21;">Dice</span></h1>
 
     <!-- Hamburger menu for mobile -->
     <div class="hamburger" id="hamburger">&#9776;</div>
@@ -56,14 +92,25 @@
     </div>
   </header>
 
+  <!-- for backend room creation -->
+  <div class="room-controls">
+    <input type="text" id="room-id" placeholder="Enter Room ID" />
+    <button id="create-room-btn" class="orange-btn">Create Room</button>
+    <button id="join-room-btn" class="orange-btn">Join Room</button>
+  </div>
+
+  <div id="room-status" style="margin: 10px; font-weight: bold;"></div>
+  <div id="players-list" style="margin: 10px;"></div>
 
 
   <div class="player-turn">
     <span class="player-turn-input">
       Player: <span id="current-player" style="color: black;">Player 1</span>
     </span>
+    <div id="waiting-message" style="color: gray; font-size: 14px; margin-top: 5px;"></div>
   </div>
- 
+
+
   <div class="game-container">
     <div class="board-container">
       <div class="board" id="board"></div>
@@ -113,10 +160,6 @@
   <audio id="win-sound" src="/frontend/assets/audio/victory-sound.mp3"></audio>
   <audio id="booster-sound" src="/frontend/assets/audio/booster-sound.wav"></audio>
 
-  <!-- Script (should always be last) -->
-  <script src="/frontend/assets/js/script.js"></script>
-  <script src="/frontend/assets/js/instructions.js"></script>
-
   <!-- hamburger script -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -128,6 +171,18 @@
       });
     });
   </script>
+
+  <!-- Socket.IO client -->
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://192.168.0.108:3000'); // ✅ your laptop's IP on Wi-Fi
+  </script>
+
+
+  <!-- Script (should always be last) -->
+  <script src="/frontend/assets/js/script.js"></script>
+  <!-- <script src="/frontend/assets/js/instructions.js"></script> -->
+
 
 
 </body>
