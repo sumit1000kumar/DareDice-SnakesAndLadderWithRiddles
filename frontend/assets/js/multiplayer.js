@@ -1,10 +1,11 @@
-// merged multiplayer.js with full game logic from script.js
+const joinLeaveAudio = new Audio("/assets/audio/booster-sound.wav");
+const diceRollAudio = new Audio("/assets/audio/dice-sound.wav");
 
 const socket = io();
 let isAdmin = false;
 let currentRoomId = "";
 
-// DOM references for room controls
+// DOM references
 const roomInput = document.getElementById("room-id-input");
 const createBtn = document.getElementById("create-room-btn");
 const createRandomBtn = document.getElementById("create-random-btn");
@@ -15,12 +16,9 @@ const roomIdDisplay = document.getElementById("room-id-display");
 const copyBtn = document.getElementById("copy-btn");
 const startGameBtn = document.getElementById("start-game-btn");
 const gameSection = document.getElementById("game-section");
-
-// DOM references for gameplay
 const board = document.getElementById("board");
 const dice = document.getElementById("dice");
 
-// --- Game State ---
 const gameState = {
   players: [],
   currentPlayer: 0,
@@ -36,8 +34,6 @@ const gameState = {
   },
   boosterCells: [45, 10, 71, 60, 54, 28, 87, 18, 50, 40, 66, 82, 5]
 };
-
-// --- Socket.IO Room Setup ---
 
 createBtn?.addEventListener("click", () => {
   const roomId = roomInput.value.trim();
@@ -76,31 +72,20 @@ function joinSuccess(roomId, adminFlag) {
   roomIdDisplay.textContent = roomId;
   copySection.style.display = "inline-block";
   gameSection.style.display = "block";
-  if (!isAdmin) startGameBtn.style.display = "none";
-  createBoard(); // Show board background even before game starts
-
-  // Minimize layout impact of buttons
-  document.querySelector(".room-controls").style.flexWrap = "wrap";
-  document.querySelector(".room-controls").style.gap = "0.25rem";
-  document.querySelector(".room-controls").style.marginBottom = "0.5rem";
-  const inputs = document.querySelectorAll(".room-controls input, .room-controls button");
-  inputs.forEach(el => {
-    el.style.fontSize = "0.85rem";
-    el.style.padding = "0.4rem 0.6rem";
-    el.style.flex = "none";
-    el.style.width = "auto";
-  });
+  startGameBtn.style.display = isAdmin ? "inline-block" : "none";
+  createBoard();
 }
 
 startGameBtn?.addEventListener("click", () => {
   socket.emit("startGame", currentRoomId);
+  startGameBtn.classList.add("hidden");
 });
 
 socket.on("updatePlayers", (players) => {
   playerList.innerHTML = "";
   players.forEach((player, i) => {
     const li = document.createElement("li");
-    li.textContent = `${i + 1}. ${player.name} ${player.isAdmin ? "(Admin)" : ""}`;
+    li.textContent = `${i + 1}. ${player.name} ${player.isAdmin ? "👑" : ""}`;
     playerList.appendChild(li);
   });
 
@@ -109,7 +94,25 @@ socket.on("updatePlayers", (players) => {
     name: `Player ${i + 1}`,
     position: 1,
     color: getRandomColor(),
+    socketId: p.id,
   }));
+
+  const currentUser = players.find(p => p.id === socket.id);
+  isAdmin = currentUser?.isAdmin;
+  startGameBtn.style.display = isAdmin ? "inline-block" : "none";
+});
+
+socket.on("playerLeft", (playerName) => {
+  const li = document.createElement("li");
+  li.textContent = `${playerName} left the game.`;
+  li.style.color = "red";
+  li.style.fontStyle = "italic";
+  playerList.appendChild(li);
+  joinLeaveAudio.play();
+});
+
+socket.on("adminReassigned", (newAdminName) => {
+  alert(`Admin reassigned to ${newAdminName}`);
 });
 
 socket.on("gameStarted", () => {
@@ -119,44 +122,70 @@ socket.on("gameStarted", () => {
   renderPlayers();
 });
 
-// --- Game Logic ---
-function getRandomColor() {
-  const hue = Math.floor(Math.random() * 360);
-  return `hsl(${hue}, 70%, 60%)`;
-}
-
-dice?.addEventListener("click", () => {
-  if (!isAdmin || !gameState.gameActive) return;
-  rollDice();
+socket.on("diceRolled", ({ value, playerIndex }) => {
+  gameState.diceValue = value;
+  gameState.currentPlayer = playerIndex;
+  dice.textContent = value;
+  dice.classList.add("dice-rolling");
+  diceRollAudio.play();
+  setTimeout(() => dice.classList.remove("dice-rolling"), 600);
+  movePlayer();
 });
 
-function rollDice() {
-  dice.style.pointerEvents = "none";
-  let rolls = 0;
-  const interval = setInterval(() => {
-    gameState.diceValue = Math.floor(Math.random() * 6) + 1;
-    dice.textContent = gameState.diceValue;
-    rolls++;
-    if (rolls >= 10) {
-      clearInterval(interval);
-      movePlayer();
-      dice.style.pointerEvents = "auto";
-    }
-  }, 100);
-}
+dice?.addEventListener("click", () => {
+  if (!gameState.gameActive) return;
+
+  const currentPlayer = gameState.players[gameState.currentPlayer];
+  if (socket.id !== currentPlayer.socketId) return;
+
+  const value = Math.floor(Math.random() * 6) + 1;
+  socket.emit("rollDice", { roomId: currentRoomId, value, playerIndex: gameState.currentPlayer });
+});
 
 function movePlayer() {
   const player = gameState.players[gameState.currentPlayer];
-  player.position = Math.min(player.position + gameState.diceValue, 100);
-  renderPlayers();
-  if (player.position === 100) {
-    alert(`${player.name} wins! 🏆`);
-    gameState.gameActive = false;
-  } else {
-    gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
-    dice.textContent = "?";
-  }
+  const start = player.position;
+  const end = Math.min(start + gameState.diceValue, 100);
+  let step = start + 1;
+
+  const interval = setInterval(() => {
+    // Remove player from previous position
+    const prevCell = document.querySelector(`.cell[data-number='${player.position}']`);
+    if (prevCell) {
+      const prevToken = prevCell.querySelector(`.player-${player.id}`);
+      if (prevToken) prevToken.remove();
+    }
+
+    // Move one step forward
+    player.position = step;
+    renderPlayers();
+    step++;
+
+    if (step > end) {
+      clearInterval(interval);
+
+      // Check for snake or ladder after moving
+      if (gameState.snakes[player.position]) {
+        player.position = gameState.snakes[player.position];
+        renderPlayers();
+      } else if (gameState.ladders[player.position]) {
+        player.position = gameState.ladders[player.position];
+        renderPlayers();
+      }
+
+      // Check for win condition
+      if (player.position === 100) {
+        alert(`${player.name} wins! 🏆`);
+        gameState.gameActive = false;
+      } else {
+        // Next player's turn
+        gameState.currentPlayer = (gameState.currentPlayer + 1) % gameState.players.length;
+        dice.textContent = "?";
+      }
+    }
+  }, 200); // Adjust this value for speed
 }
+
 
 function createBoard() {
   board.innerHTML = "";
@@ -199,8 +228,13 @@ function renderPlayers() {
       const p = document.createElement("div");
       p.className = `player player-${player.id}`;
       p.style.backgroundColor = player.color;
-      p.textContent = ["🐻","😎","😈","💀","🎃","🐯","🦍","🤴🏻"][player.id - 1];
+      p.textContent = ["🐻", "😎", "😈", "💀", "🎃", "🐯", "🦍", "🤴🏻"][player.id - 1];
       cell.appendChild(p);
     }
   });
+}
+
+function getRandomColor() {
+  const hue = Math.floor(Math.random() * 360);
+  return `hsl(${hue}, 70%, 60%)`;
 }

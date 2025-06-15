@@ -76,3 +76,55 @@ Enjoy the game! 🎉 (Khelo, haste raho, jeeto!)
 <!-- ====================================================================== -->
 ```
 DareDice-SnakesAndLadderWithRiddles
+
+```
+DareDice-SnakesAndLadderWithRiddles
+├─ backend
+│  ├─ package-lock.json
+│  ├─ package.json
+│  └─ server.js
+├─ frontend
+│  ├─ assets
+│  │  ├─ audio
+│  │  │  ├─ booster-sound.wav
+│  │  │  ├─ dice-sound.wav
+│  │  │  ├─ ladder-sound.wav
+│  │  │  ├─ move-sound.wav
+│  │  │  ├─ snake-sound.wav
+│  │  │  └─ victory-sound.mp3
+│  │  ├─ css
+│  │  │  ├─ multiplayer.css
+│  │  │  ├─ styles-us.css
+│  │  │  └─ styles.css
+│  │  ├─ img
+│  │  │  ├─ amitabhImg-removebg-preview.png
+│  │  │  ├─ amitabhImg-removebg-preview.webp
+│  │  │  ├─ amitabhImg.jpeg
+│  │  │  ├─ amitabhImg.webp
+│  │  │  ├─ bgIntro.jpg
+│  │  │  ├─ bgIntro.webp
+│  │  │  ├─ ladderImg.png
+│  │  │  ├─ ladderImg.webp
+│  │  │  ├─ ladderImg2.png
+│  │  │  ├─ ladderImg2.webp
+│  │  │  ├─ logo
+│  │  │  │  ├─ gameLogo.png
+│  │  │  │  └─ gameLogo.webp
+│  │  │  ├─ snakeImg.png
+│  │  │  ├─ snakeImg.webp
+│  │  │  ├─ snakeImg2.png
+│  │  │  └─ snakeImg2.webp
+│  │  └─ js
+│  │     ├─ instructions.js
+│  │     ├─ multiplayer.js
+│  │     ├─ script-us.js
+│  │     └─ script.js
+│  ├─ classic.html
+│  ├─ game.html
+│  ├─ index-old.html
+│  ├─ index-us.html
+│  ├─ index.html
+│  └─ multiplayer.html
+└─ readme.md
+
+```
