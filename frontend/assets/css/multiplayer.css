@@ -1,0 +1,206 @@
+/* multiplayer.css */
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: #f5f5f5;
+  color: #333;
+}
+
+header {
+  background: #222;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.multiplayer-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.room-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.room-controls input[type="text"] {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.room-controls button {
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.room-controls button:hover {
+  background-color: #0056b3;
+}
+
+#copy-room-section {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.player-stats {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.player-stats ul {
+  list-style: none;
+  padding: 0;
+}
+
+.player-stats li {
+  margin: 0.25rem 0;
+  font-weight: bold;
+}
+/* 
+#board {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 2px;
+  background: #f0f0f0;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border: 2px solid #ccc;
+}
+
+.cell {
+  background-color: #ffffff;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+  border: 1px solid #ddd;
+}
+
+.cell-number {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 0.65rem;
+  color: #555;
+}
+
+.snake {
+  background: repeating-linear-gradient(45deg, #e63946, #e63946 10px, #f1faee 10px, #f1faee 20px);
+}
+
+.ladder {
+  background: repeating-linear-gradient(135deg, #2a9d8f, #2a9d8f 10px, #e9c46a 10px, #e9c46a 20px);
+}
+
+.booster {
+  background: repeating-linear-gradient(45deg, #ffb703, #ffb703 10px, #fb8500 10px, #fb8500 20px);
+}
+
+.trophy-cell {
+  background-color: gold;
+}
+
+.player {
+  position: relative;
+  z-index: 10;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+
+@media (max-width: 768px) {
+  .multiplayer-container {
+    padding: 0.5rem;
+    margin: 1rem;
+  }
+
+  .room-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .room-controls input[type="text"],
+  .room-controls button {
+    width: 100%;
+    max-width: 90vw;
+  }
+
+  #copy-room-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .player-stats h2 {
+    font-size: 1.2rem;
+  }
+
+  .player-stats li {
+    font-size: 0.9rem;
+  }
+
+  .game-container {
+    padding: 0.5rem;
+  }
+
+  .dice {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .room-controls button,
+  .room-controls input[type="text"] {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+
+  .dice {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .player-stats h2 {
+    font-size: 1rem;
+  }
+
+  .board {
+    max-width: 95vw;
+    height: 95vw;
+    border-width: 8px;
+  }
+}

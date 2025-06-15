@@ -1,102 +1,103 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const cors = require('cors');
+const express = require("express");
+const http = require("http");
+const path = require("path");
+const { Server } = require("socket.io");
+const cors = require("cors");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
-const server = http.createServer(app); // ✅ Create server first
-
-const FRONTEND_ORIGIN = process.env.FRONTEND_URL || "https://www.sumitbuilds.live";
-
-// ✅ Use CORS middleware for HTTP requests (optional here)
-app.use(cors({
-  origin: FRONTEND_ORIGIN,
-  credentials: true
-}));
-
-// ✅ Configure Socket.IO CORS after server is created
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: FRONTEND_ORIGIN,
-    methods: ["GET", "POST"],
-    credentials: true
+    origin: "*", // Allow all for now, restrict in prod
+    methods: ["GET", "POST"]
   }
 });
 
-let rooms = {}; // roomId => { admin: socketId, players: [] }
+// 🔗 Serve frontend folder (including multiplayer.html, assets, etc.)
+app.use(cors());
+app.use(express.static(path.join(__dirname, "../frontend")));
 
-io.on('connection', socket => {
-  console.log("User connected:", socket.id);
+const rooms = {}; // { roomId: { players: [], started: false } }
 
-  socket.on('create-room', (roomId, callback) => {
+io.on("connection", (socket) => {
+  console.log(`👤 User connected: ${socket.id}`);
+
+  // Create room
+  socket.on("createRoom", (roomId, callback) => {
     if (rooms[roomId]) {
-      return callback({ success: false, message: 'Room already exists' });
+      return callback({ success: false, message: "Room already exists!" });
     }
+
     rooms[roomId] = {
-      admin: socket.id,
-      players: [{ id: socket.id, name: 'Player 1' }]
+      players: [{ id: socket.id, name: "Player", isAdmin: true }],
+      started: false
     };
+
     socket.join(roomId);
     callback({ success: true });
-    io.to(roomId).emit('players-update', rooms[roomId].players);
+
+    io.to(roomId).emit("updatePlayers", rooms[roomId].players);
+    console.log(`✅ Room created: ${roomId}`);
   });
 
-  socket.on('join-room', (roomId, callback) => {
-    if (!rooms[roomId]) {
-      return callback({ success: false, message: 'Room not found' });
+  // Join room
+  socket.on("joinRoom", (roomId, callback) => {
+    const room = rooms[roomId];
+
+    if (!room) {
+      return callback({ success: false, message: "Room does not exist!" });
     }
-    const playerNumber = rooms[roomId].players.length + 1;
-    rooms[roomId].players.push({ id: socket.id, name: `Player ${playerNumber}` });
+
+    if (room.started) {
+      return callback({ success: false, message: "Game already started!" });
+    }
+
     socket.join(roomId);
-    callback({ success: true, playerName: `Player ${playerNumber}` });
-    io.to(roomId).emit('players-update', rooms[roomId].players);
+    room.players.push({ id: socket.id, name: "Player", isAdmin: false });
+
+    callback({ success: true });
+    io.to(roomId).emit("updatePlayers", room.players);
+    console.log(`👥 User joined room: ${roomId}`);
   });
 
-  socket.on('start-game', (roomId) => {
-    console.log("🔴 start-game emitted to room", roomId);
-    if (rooms[roomId]) {
-      io.to(roomId).emit('start-game');
+  // Start game
+  socket.on("startGame", (roomId) => {
+    const room = rooms[roomId];
+    if (room && !room.started) {
+      room.started = true;
+      io.to(roomId).emit("gameStarted");
+      console.log(`🎮 Game started in room: ${roomId}`);
     }
   });
 
-  socket.on('dice-rolled', ({ roomId, playerId, diceValue }) => {
-    console.log(`🎲 Dice rolled by ${playerId} in room ${roomId}: ${diceValue}`);
-    io.to(roomId).emit('dice-rolled', { playerId, diceValue });
-  });
+  // Disconnect logic
+  socket.on("disconnect", () => {
+    for (const roomId in rooms) {
+      const room = rooms[roomId];
+      const index = room.players.findIndex((p) => p.id === socket.id);
 
-  socket.on('leave-room', (roomId) => {
-    socket.leave(roomId);
-    console.log(`🔴 ${socket.id} left room ${roomId}`);
+      if (index !== -1) {
+        const removedPlayer = room.players.splice(index, 1)[0];
+        io.to(roomId).emit("updatePlayers", room.players);
+        console.log(`❌ ${removedPlayer.name} left room ${roomId}`);
 
-    if (rooms[roomId]) {
-      rooms[roomId].players = rooms[roomId].players.filter(p => p.id !== socket.id);
+        // Delete room if empty
+        if (room.players.length === 0) {
+          delete rooms[roomId];
+          console.log(`🗑️ Room deleted: ${roomId}`);
+        }
 
-      if (rooms[roomId].admin === socket.id) {
-        io.to(roomId).emit('admin-left');
-        delete rooms[roomId];
-        console.log(`❌ Room ${roomId} closed (admin left)`);
-      } else {
-        io.to(roomId).emit('players-update', rooms[roomId].players);
-      }
-    }
-  });
-
-  socket.on('disconnect', () => {
-    for (let roomId in rooms) {
-      rooms[roomId].players = rooms[roomId].players.filter(p => p.id !== socket.id);
-
-      if (rooms[roomId].admin === socket.id) {
-        io.to(roomId).emit('admin-left');
-        delete rooms[roomId];
-      } else {
-        io.to(roomId).emit('players-update', rooms[roomId].players);
+        break;
       }
     }
   });
 });
 
-// ✅ Use PORT from environment or fallback
+// Start server
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+server.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

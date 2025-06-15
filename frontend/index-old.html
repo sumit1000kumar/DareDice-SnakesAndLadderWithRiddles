@@ -2,44 +2,12 @@
 <html lang="en">
 
 <head>
-
-    <!-- Basic Meta Tags -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DareDice - Snakes & Ladders with Riddles</title>
-    <meta name="description"
-        content="Play DareDice – a fun twist on Snakes & Ladders with brain-teasing riddles! Enjoy this unique multiplayer board game online with challenges at every turn." />
-    <meta name="keywords"
-        content="DareDice, Snakes and Ladders, Riddle Game, Multiplayer Game, Board Game, Online Fun, Puzzle Game, Dice Game, Brain Teasers, Family Game" />
-    <meta name="author" content="DareDice" />
-
-    <!-- Open Graph Meta Tags (for social sharing) -->
-    <meta property="og:title" content="DareDice - Snakes & Ladders with Riddles" />
-    <meta property="og:description"
-        content="A riddle-packed adventure on the classic board game – Snakes & Ladders like never before!" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://sumitbuilds.live/" />
-    <meta property="og:image" content="https://sumitbuilds.live/frontend/assets/img/logo/gameLogo.webp" />
-
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DareDice - Snakes & Ladders with Riddles" />
-    <meta name="twitter:description" content="A creative spin on Snakes & Ladders with fun and challenging riddles." />
-    <meta name="twitter:image" content="https://sumitbuilds.live/frontend/assets/img/logo/gameLogo.webp" />
-
-    <!-- Favicon and Icons -->
-    <link rel="icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png" />
-    <link rel="manifest" href="/assets/img/favicons/site.webmanifest" />
-
-    <!-- CSS & Fonts -->
-    <link rel="stylesheet" href="/assets/css/index.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-         /* General Styles */
+        /* General Styles */
         :root {
             --primary-dark: #000000;
             --secondary-dark: #121212;
@@ -629,17 +597,15 @@
 
 <body>
     <!-- loader -->
-    <div id="loader" class="loader-overlay">
-        <div class="loader-spinner"></div>
-        <div class="loader-text">Loading Dare<span style="color: #b0ee21;">Dice</span> Game...</div>
-    </div>
-
-    <!-- animated cursor -->
-    <div id="custom-cursor"></div>
+  <div id="loader" class="loader-overlay">
+    <!-- <img src="/frontend/assets/img/snakeImg2.png" alt="Loading Logo" class="loader-img"> -->
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Dare<span style="color: #b0ee21;">Dice</span> Game...</div>
+  </div>
 
     <!-- Header -->
     <header class="header">
-        <h1><img src="./assets/img/logo/gameLogo.png" alt="logo" width="50px" class="logo"> Dare<span
+        <h1><img src="/frontend/assets/img/logo/gameLogo.png" alt="logo" width="50px" class="logo"> Dare <span
                 class="highlight">Dice</span></h1>
         <nav>
             <button id="howToPlayBtn" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">
@@ -667,7 +633,7 @@
         <!-- Hero Content -->
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title" style="color: white;">Dare<span class="highlight">Dice</span></h1>
+                <h1 class="hero-title">Dare<span class="highlight">Dice</span></h1>
                 <p class="hero-subtitle">
                     The ultimate <span class="orange-highlight">3D Snakes & Ladders</span> experience with
                     <span class="highlight">challenging riddles</span> and <span class="highlight">exciting
@@ -676,15 +642,12 @@
                 </p>
 
                 <div class="cta-buttons">
-                    <a href="./classic.html" class="btn btn-primary"
-                        style="text-decoration: none; color: black;">
-                        <i class="fa-solid fa-dice"></i> Classic Mode
-                        <!-- <i class="fa-solid fa-chess-board"></i> Classic Mode -->
-                    </a>
-
-                    <a href="./multiplayer.html" class="btn btn-secondary" style="text-decoration: none;">
-                        <i class="fa-solid fa-globe"></i> Multiplayer Mode
-                    </a>
+                    <button id="start-game-btn" class="btn btn-primary">
+                        <i class="fas fa-play"></i> <a href="./" style="text-decoration: none; color: black;"> Start New Game</a>
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-users"></i> Invite Friends
+                    </button>
                 </div>
             </div>
 
@@ -721,15 +684,14 @@
     <div id="howToPlayModal" class="modal">
         <div class="modal-content">
             <span class="close-btn" id="closeModal">&times;</span>
-            <h2>How to Play <span style="color: white;">Dare</span>Dice</h2>
+            <h2>How to Play DareDice</h2>
             <ol>
-                <li>Select the number of players and start the game.</li>
-                <li>Each player takes turns rolling the dice to move forward.</li>
-                <li>Land on a <strong>ladder</strong>? Climb up to a higher cell!</li>
-                <li>Land on a <strong>snake</strong>? Answer a riddle to stay — or slide down if you're wrong!</li>
-                <li>Land on a <strong>booster tile</strong>? Solve a bonus riddle or complete a dare for +6 steps!</li>
-                <li>If you <strong>fail or skip a dare</strong>, you move back by 2 steps.</li>
-                <li>The first player to reach cell <strong>100</strong> wins the game!</li>
+                <li>Roll the 3D dice to move across the board.</li>
+                <li>If you land on a ladder, climb up!</li>
+                <li>If you land on a snake, you’ll slide down.</li>
+                <li>Land on a riddle tile? Solve it to stay — or move back!</li>
+                <li>Land on a dare tile? Complete it or skip your next turn!</li>
+                <li>First player to reach the top wins the game!</li>
             </ol>
         </div>
     </div>
@@ -740,7 +702,7 @@
         Made for fun by <span class="highlight" id="secret-cheat">Sumit</span>
     </footer>
 
-    <script src="./assets/js/instructions.js"></script>
+    <script src="/frontend/assets/js/instructions.js"></script>
 
     <script>
         // Simple animation for the hero section
@@ -781,42 +743,23 @@
         });
     </script>
 
+    
+  <!-- loader js -->
+  <script>
+    window.addEventListener('load', function () {
+      const loader = document.getElementById('loader');
 
-    <!-- loader js -->
-    <script>
-        window.addEventListener('load', function () {
-            const loader = document.getElementById('loader');
+      // Ensure a minimum 3-second delay before hiding loader
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 300); // extra delay for fade-out
+      }, 1000); // minimum 3 seconds
+    });
 
-            // Ensure a minimum 3-second delay before hiding loader
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 300);
-            }, 1000);
-        });
-    </script>
 
-    <!-- hiss sound on every click -->
-    <script>
-        const clickSound = new Audio('/assets/audio/snake-sound.wav');
-
-        document.addEventListener('click', () => {
-            clickSound.currentTime = 0;
-            clickSound.play();
-        });
-    </script>
-
-    <!-- cursor js -->
-    <script>
-        const customCursor = document.getElementById('custom-cursor');
-
-        document.addEventListener('mousemove', (e) => {
-            customCursor.style.left = `${e.clientX}px`;
-            customCursor.style.top = `${e.clientY}px`;
-        });
-    </script>
-
+  </script>
 </body>
 
 </html>

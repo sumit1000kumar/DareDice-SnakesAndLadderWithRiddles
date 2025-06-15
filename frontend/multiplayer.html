@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DareDice : Snakes & Ladder packed with exciting Riddles and Dares</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+    <link rel="stylesheet" href="./assets/css/multiplayer.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+
+<body>
+    <header class="header">
+        <h1><img src="./assets/img/logo/gameLogo.png" width="80px"> Dare <span style="color: #b0ee21;">Dice</span></h1>
+    </header>
+
+    <main class="multiplayer-container">
+        <div class="room-controls">
+            <input type="text" id="room-id-input" placeholder="Enter Room ID">
+            <button id="create-room-btn">Create Room</button>
+            <button id="create-random-btn">Create Random</button>
+            <button id="join-room-btn">Join Room</button>
+            <span id="copy-room-section" style="display:none;">
+                Room ID: <span id="room-id-display"></span>
+                <button id="copy-btn">Copy</button>
+            </span>
+        </div>
+
+        <div class="player-stats">
+            <h2>Players in Room</h2>
+            <ul id="player-list"></ul>
+        </div>
+
+        <div id="game-section" style="display:none;">
+            <!-- Game board from classic.html will be reused -->
+            <button id="start-game-btn">Start Game (Admin Only)</button>
+            <div class="game-container">
+                <div class="board" id="board"></div>
+                <div class="dice-container">
+                    <div class="dice" id="dice">?</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <!-- <script src="./assets/js/script.js"></script> -->
+    <script src="./assets/js/multiplayer.js"></script>
+
+</body>
+
+</html>
