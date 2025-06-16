@@ -1,7 +1,7 @@
 const joinLeaveAudio = new Audio("/assets/audio/booster-sound.wav");
 const diceRollAudio = new Audio("/assets/audio/dice-sound.wav");
 
-const socket = io();
+const socket = io("https://daredice-backend.onrender.com");
 let isAdmin = false;
 let currentRoomId = "";
 

@@ -356,7 +356,7 @@ body {
 }
 
 /* For the top of the ladder */
-.cell[data-number="14"],
+/* .cell[data-number="14"],
 .cell[data-number="31"],
 .cell[data-number="38"],
 .cell[data-number="84"],
@@ -365,7 +365,7 @@ body {
 .cell[data-number="81"],
 .cell[data-number="91"] {
     background-image: linear-gradient(to bottom, #8BC34A, #4CAF50);
-}
+} */
 
 /* Add ladder numbers to show connections */
 .ladder::before {
